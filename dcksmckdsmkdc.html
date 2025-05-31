@@ -1,0 +1,2889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pharmacy Finder</title>
+  <style>
+    /* Consistent Font and Base Styles to match healthindex.html */   
+    :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --primary-gradient: linear-gradient(135deg, #2563eb, #3b82f6);
+            --secondary: #0ea5e9;
+            --accent: #06b6d4;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --success: #10b981;
+            --light: #f9fafb;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            padding: 10px 20px;
+        }
+        
+        header nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            height: 100%;
+            align-items: center;
+            gap: 32px;
+        }
+        
+        .nav-links li {
+            margin: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-right: 30px;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a.active {
+            color: var(--primary);
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+
+        .main {
+            padding: 40px 0;
+            min-height: calc(100vh - 180px);
+        }
+    
+    nav a:hover::after,
+    nav a.active::after {
+      width: 100%;
+    }
+    
+    /* Apple/Tesla inspired buttons */
+    .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--gray-light);
+      color: var(--gray-dark);
+    }
+    
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+    
+    /* Original pharmacy finder styles */
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+    .search-container {
+      display: flex;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    #location-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #eaeaea;
+      border-right: none;
+      border-radius: 4px 0 0 4px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    #location-input:focus {
+      border-color: #3498db;
+      box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.3);
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 16px;
+      border-radius: 0 4px 4px 0;
+      font-weight: 500;
+    }
+    button:hover {
+      background-color: #2980b9;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(52, 152, 219, 0.2);
+    }
+    #use-current-location {
+      background-color: #2ecc71;
+      border-radius: 4px;
+      margin-left: 10px;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+    #use-current-location:hover {
+      background-color: #27ae60;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(46, 204, 113, 0.2);
+    }
+    #results {
+      margin-top: 20px;
+    }
+    .pharmacy-card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 15px;
+      background-color: #ffffff;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .pharmacy-card:hover {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .pharmacy-name {
+      font-weight: bold;
+      font-size: 18px;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+    .pharmacy-address {
+      color: #7f8c8d;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .pharmacy-phone {
+      color: #34495e;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .pharmacy-distance {
+      color: #3498db;
+      font-weight: bold;
+      margin-top: 8px;
+      display: inline-block;
+      padding: 4px 8px;
+      background-color: rgba(52, 152, 219, 0.1);
+      border-radius: 4px;
+    }
+    .pharmacy-rating {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .rating-stars {
+      color: #f1c40f;
+      margin-right: 5px;
+      letter-spacing: 1px;
+    }
+    .loading {
+      text-align: center;
+      margin: 30px 0;
+      display: none;
+      color: #3498db;
+      font-weight: 500;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: rgba(52, 152, 219, 0.05);
+    }
+    .error {
+      color: #e74c3c;
+      text-align: center;
+      margin: 20px 0;
+      display: none;
+      padding: 15px;
+      background-color: rgba(231, 76, 60, 0.05);
+      border-radius: 8px;
+      border-left: 4px solid #e74c3c;
+    }
+    .info {
+      padding: 15px;
+      background-color: rgba(52, 152, 219, 0.05);
+      border-left: 4px solid #3498db;
+      margin-bottom: 25px;
+      border-radius: 0 8px 8px 0;
+      line-height: 1.5;
+    }
+    #map {
+      height: 300px;
+      margin: 20px 0;
+      border-radius: 5px;
+      overflow: hidden;
+      display: none;
+    }
+    .directions-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: #3498db;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      padding: 6px 12px;
+      background-color: rgba(52, 152, 219, 0.05);
+      border-radius: 4px;
+    }
+    .directions-link:hover {
+      text-decoration: none;
+      background-color: rgba(52, 152, 219, 0.1);
+      color: #2980b9;
+      transform: translateY(-1px);
+    }
+    .no-results {
+      text-align: center;
+      padding: 30px;
+      background-color: rgba(52, 152, 219, 0.05);
+      border-radius: 8px;
+      margin-top: 30px;
+      color: #34495e;
+      font-weight: 500;
+    }
+    .map-fallback {
+      height: 300px;
+      background-color: #f7f9fc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 25px 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border: 1px solid #eaeaea;
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo" onclick="toggleView('welcome')">
+                    <span class="logo-icon">⚕️</span>
+                    <span class="logo-text">MediScan AI</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="healthindex.html">Home</a></li>
+                    <li><a href="#" class="active">Pharmacy Finder</a></li>
+                    <li><a href="healthindex.html?action=history">My History</a></li>
+                    <li><a href="oi.html">Calendar</a></li>
+                </ul>
+                <div class="auth-area">
+                    <div id="auth-signed-out">
+                        <button class="btn btn-outline" onclick="showLoginModal()">Sign In</button>
+                        <button class="btn btn-primary" onclick="showSignupModal()">Sign Up</button>
+                    </div>
+                    <div id="auth-signed-in" style="display: none;">
+                        <div class="user-profile">
+                            <div class="user-avatar" id="user-avatar">
+                                <!-- User initial or photo will be placed here -->
+                            </div>
+                            <span class="user-name" id="user-display-name">User</span>
+                        </div>
+                        <button class="btn btn-outline" onclick="signOut()">Sign Out</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+  <div class="container">
+    <div class="content-container">
+      <h1>Pharmacy Finder</h1>
+      
+      <div class="info">
+        Enter your location to find nearby pharmacies, or use your current location.
+      </div>
+      
+      <div class="search-container">
+        <input type="text" id="location-input" placeholder="Enter your address or city">
+        <button id="search-btn">Search</button>
+        <button id="use-current-location">Current Location</button>
+      </div>
+      
+      <div id="loading" class="loading">Searching for pharmacies near you...</div>
+      <div id="error" class="error"></div>
+      
+      <div id="map"></div>
+      
+      <div id="results"></div>
+    </div>
+  </div>
+
+  <script>
+    // DOM elements
+    const locationInput = document.getElementById('location-input');
+    const searchBtn = document.getElementById('search-btn');
+    const useCurrentLocationBtn = document.getElementById('use-current-location');
+    const resultsContainer = document.getElementById('results');
+    const loadingElement = document.getElementById('loading');
+    const errorElement = document.getElementById('error');
+    const mapElement = document.getElementById('map');
+    
+    // MapBox access token (using a public token for demonstration)
+    const mapboxToken = 'pk.eyJ1IjoiZXhhbXBsZXVzZXIiLCJhIjoiY2xjaTd1bjAwMHRrNzNwbXpuYXEwbWVkZSJ9.G4MJn9-FvkDZuK9bIRFBEQ';
+    
+    // Function to find pharmacies using real data from OSM
+    function findPharmacies(lat, lon, radius = 5) { // radius in km
+      return new Promise((resolve, reject) => {
+        // Create a bounding box for the search area
+        const R = 111.32; // approx. km per degree of latitude
+        const latDelta = radius / R;
+        const lonDelta = radius / (R * Math.cos(lat * Math.PI / 180));
+        
+        // Define the Overpass API query
+        const overpassQuery = `
+          [out:json][timeout:25];
+          (
+            node["amenity"="pharmacy"](around:${radius * 1000},${lat},${lon});
+            way["amenity"="pharmacy"](around:${radius * 1000},${lat},${lon});
+            relation["amenity"="pharmacy"](around:${radius * 1000},${lat},${lon});
+          );
+          out body;
+          >;
+          out skel qt;
+        `;
+        
+        console.log("Fetching pharmacy data from OpenStreetMap...");
+        
+        // Use the Overpass API to get pharmacy data
+        const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
+        
+        fetch(overpassUrl)
+          .then(response => response.json())
+          .then(data => {
+            console.log("Received OSM data:", data);
+            
+            if (!data.elements || data.elements.length === 0) {
+              console.log("No pharmacies found in OpenStreetMap");
+              // If no results, get location info and create location-based results
+              return fetchLocationInfo(lat, lon)
+                .then(locationInfo => {
+                  return createLocationBasedPharmacies(lat, lon, locationInfo);
+                });
+            }
+            
+            // Process the OpenStreetMap data
+            const pharmacies = [];
+            
+            data.elements.forEach(element => {
+              // Only process elements that have tags and are pharmacies
+              if (element.tags && element.tags.amenity === 'pharmacy') {
+                // Get the coordinates
+                let pharmacyLat, pharmacyLon;
+                
+                if (element.type === 'node') {
+                  pharmacyLat = element.lat;
+                  pharmacyLon = element.lon;
+                } else if (element.center) {
+                  // Ways and relations might have center points
+                  pharmacyLat = element.center.lat;
+                  pharmacyLon = element.center.lon;
+                } else {
+                  // Skip if we can't get coordinates
+                  return;
+                }
+                
+                // Calculate distance
+                const distance = calculateDistance(lat, lon, pharmacyLat, pharmacyLon);
+                
+                // Get the name
+                const name = element.tags.name || 
+                             element.tags.brand || 
+                             element.tags.operator || 
+                             "Pharmacy";
+                
+                // Build the address
+                let address = '';
+                
+                if (element.tags['addr:housenumber'] && element.tags['addr:street']) {
+                  address = `${element.tags['addr:housenumber']} ${element.tags['addr:street']}`;
+                  
+                  if (element.tags['addr:city']) {
+                    address += `, ${element.tags['addr:city']}`;
+                  }
+                  
+                  if (element.tags['addr:state']) {
+                    address += `, ${element.tags['addr:state']}`;
+                  }
+                  
+                  if (element.tags['addr:postcode']) {
+                    address += ` ${element.tags['addr:postcode']}`;
+                  }
+                } else if (element.tags['addr:full']) {
+                  address = element.tags['addr:full'];
+                } else {
+                  // Create a simple address based on what we know
+                  const addressParts = [];
+                  
+                  if (element.tags['addr:street']) {
+                    addressParts.push(element.tags['addr:street']);
+                  }
+                  
+                  if (element.tags['addr:city']) {
+                    addressParts.push(element.tags['addr:city']);
+                  }
+                  
+                  if (element.tags['addr:state']) {
+                    addressParts.push(element.tags['addr:state']);
+                  }
+                  
+                  if (element.tags['addr:postcode']) {
+                    addressParts.push(element.tags['addr:postcode']);
+                  }
+                  
+                  address = addressParts.join(', ');
+                  
+                  // If we still have no address components
+                  if (!address) {
+                    address = "Address not available";
+                  }
+                }
+                
+                // Get the phone if available
+                const phone = element.tags.phone || 
+                             element.tags['contact:phone'] || 
+                             null;
+                
+                // Add to our pharmacies array
+                pharmacies.push({
+                  name: name,
+                  address: address,
+                  phone: phone,
+                  distance: distance.toFixed(1),
+                  lat: pharmacyLat,
+                  lon: pharmacyLon,
+                  // OSM doesn't include ratings
+                  rating: null,
+                  user_ratings_total: null
+                });
+              }
+            });
+            
+            // Sort by distance
+            pharmacies.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+            
+            if (pharmacies.length > 0) {
+              // Return at most 10 pharmacies
+              resolve(pharmacies.slice(0, 10));
+            } else {
+              console.log("No valid pharmacy data found, using location-based fallback");
+              // If no valid pharmacies found, use location-based fallback
+              return fetchLocationInfo(lat, lon)
+                .then(locationInfo => {
+                  return createLocationBasedPharmacies(lat, lon, locationInfo);
+                })
+                .then(resolve);
+            }
+          })
+          .catch(error => {
+            console.error("Error fetching pharmacy data:", error);
+            // If API fails, use location-based fallback
+            fetchLocationInfo(lat, lon)
+              .then(locationInfo => {
+                return createLocationBasedPharmacies(lat, lon, locationInfo);
+              })
+              .then(resolve)
+              .catch(reject);
+          });
+      });
+    }
+    
+    // Fetch location information from coordinates
+    function fetchLocationInfo(lat, lon) {
+      return fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log("Location info:", data);
+          
+          // Extract useful location information
+          const locationInfo = {
+            city: data.address?.city || 
+                  data.address?.town || 
+                  data.address?.village || 
+                  data.address?.county || 
+                  "Unknown Location",
+            state: data.address?.state || null,
+            country: data.address?.country || null,
+            postcode: data.address?.postcode || null,
+            road: data.address?.road || null
+          };
+          
+          return locationInfo;
+        })
+        .catch(error => {
+          console.error("Error getting location info:", error);
+          // Return minimal location info
+          return {
+            city: "Unknown Location",
+            state: null,
+            country: null
+          };
+        });
+    }
+    
+    // Create pharmacy data based on location information
+    function createLocationBasedPharmacies(lat, lon, locationInfo) {
+      console.log("Creating location-based pharmacies for:", locationInfo);
+      
+      // Get pharmacy chains for this location
+      const chains = getPharmacyChainsForLocation(locationInfo.country, locationInfo.state);
+      
+      // Create an array to hold our pharmacies
+      const pharmacies = [];
+      
+      // Generate diverse street names for this location
+      const streetNames = generateDiverseStreetNames(locationInfo);
+      
+      // Create 8 pharmacies around the location
+      for (let i = 0; i < 8; i++) {
+        // Create offsets in different directions (45° apart)
+        const angle = i * Math.PI / 4;
+        const distance = 0.5 + Math.random() * 4; // 0.5 to 4.5 km
+        
+        // Convert to lat/lon offsets
+        const R = 111.32; // approx. km per degree of latitude
+        const latOffset = Math.sin(angle) * distance / R;
+        const lonOffset = Math.cos(angle) * distance / (R * Math.cos(lat * Math.PI / 180));
+        
+        // Calculate pharmacy position
+        const pharmacyLat = lat + latOffset;
+        const pharmacyLon = lon + lonOffset;
+        
+        // Select a pharmacy name
+        const pharmacyName = chains[Math.floor(Math.random() * chains.length)];
+        
+        // Create a realistic address
+        let address = '';
+        
+        // Pick a unique street for each pharmacy
+        const streetNumber = Math.floor(Math.random() * 500) + 1;
+        const streetName = streetNames[i % streetNames.length]; // Ensure we use a different street name for each pharmacy
+        address = `${streetNumber} ${streetName}`;
+        
+        // Add city and other location components
+        if (locationInfo.city) {
+          address += `, ${locationInfo.city}`;
+          
+          if (locationInfo.state) {
+            address += `, ${locationInfo.state}`;
+          }
+          
+          if (locationInfo.postcode) {
+            address += ` ${locationInfo.postcode}`;
+          }
+        }
+        
+        // Generate a phone number
+        const phone = generatePhoneNumber(locationInfo.country, locationInfo.state);
+        
+        // Add to our pharmacies array
+        pharmacies.push({
+          name: pharmacyName,
+          address: address,
+          phone: phone,
+          distance: distance.toFixed(1),
+          lat: pharmacyLat,
+          lon: pharmacyLon,
+          rating: null,
+          user_ratings_total: null
+        });
+      }
+      
+      // Sort by distance
+      pharmacies.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+      
+      return pharmacies;
+    }
+    
+    // Function to generate diverse street names based on location
+    function generateDiverseStreetNames(locationInfo) {
+      // Common street suffixes
+      const streetSuffixes = ["St", "Ave", "Rd", "Blvd", "Dr", "Ln", "Way", "Pkwy", "Ct", "Pl"];
+      
+      // Common street name themes
+      const streetThemes = {
+        "nature": ["Oak", "Pine", "Maple", "Cedar", "Elm", "Birch", "Willow", "Forest", "River", "Lake", "Meadow", "Mountain"],
+        "presidents": ["Washington", "Jefferson", "Lincoln", "Adams", "Madison", "Monroe", "Jackson", "Roosevelt", "Kennedy", "Wilson"],
+        "numbers": ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"],
+        "colors": ["Red", "Blue", "Green", "Yellow", "White", "Black", "Orange", "Purple", "Brown", "Silver", "Golden"],
+        "cardinal": ["North", "South", "East", "West", "Northeast", "Northwest", "Southeast", "Southwest"],
+        "historic": ["Main", "Broadway", "Park", "Market", "Church", "Mill", "Center", "High", "Union", "Grand"]
+      };
+      
+      // Use location's real road name as one of the options if available
+      const streets = [];
+      if (locationInfo.road) {
+        streets.push(locationInfo.road);
+      }
+      
+      // Add country-specific street names
+      if (locationInfo.country === "United States" || locationInfo.country === "USA") {
+        // Add state-specific street names for US
+        if (locationInfo.state === "California") {
+          streets.push("Sunset Blvd", "Pacific Ave", "Ocean Dr", "Mission St", "Wilshire Blvd");
+        } else if (locationInfo.state === "New York") {
+          streets.push("Broadway", "Central Park West", "Lexington Ave", "Madison Ave", "Park Ave");
+        } else if (locationInfo.state === "Florida") {
+          streets.push("Palm Blvd", "Ocean Dr", "Beach St", "Gulf Blvd", "Flamingo Way");
+        } else if (locationInfo.state === "Texas") {
+          streets.push("Lone Star Blvd", "Ranch Rd", "Pecan St", "Bluebonnet Ln", "Alamo Dr");
+        }
+      } else if (locationInfo.country === "United Kingdom") {
+        streets.push("High St", "Church Ln", "Queen's Rd", "King's Ave", "Victoria St");
+      } else if (locationInfo.country === "Canada") {
+        streets.push("Maple Ave", "Queen St", "King St", "Parliament St", "Bay St");
+      } else if (locationInfo.country === "Australia") {
+        streets.push("Wattle St", "Kangaroo Rd", "Beach Rd", "King St", "Queen St");
+      }
+      
+      // Generate street names from themes to have at least 12 diverse street names
+      while (streets.length < 12) {
+        // Pick a random theme and street component
+        const themes = Object.keys(streetThemes);
+        const theme = themes[Math.floor(Math.random() * themes.length)];
+        const base = streetThemes[theme][Math.floor(Math.random() * streetThemes[theme].length)];
+        const suffix = streetSuffixes[Math.floor(Math.random() * streetSuffixes.length)];
+        
+        const streetName = `${base} ${suffix}`;
+        
+        // Only add unique street names
+        if (!streets.includes(streetName)) {
+          streets.push(streetName);
+        }
+      }
+      
+      // Shuffle the street names to get random order
+      return shuffleArray(streets);
+    }
+    
+    // Function to shuffle an array
+    function shuffleArray(array) {
+      // Create a copy of the array to avoid modifying the original
+      const newArray = [...array];
+      
+      // Fisher-Yates shuffle algorithm
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      
+      return newArray;
+    }
+    
+    // Get pharmacy chains based on location
+    function getPharmacyChainsForLocation(country, state) {
+      // Default US chains
+      const defaultChains = [
+        "Walgreens", "CVS Pharmacy", "Rite Aid", "Walmart Pharmacy",
+        "Kroger Pharmacy", "Target Pharmacy", "Publix Pharmacy"
+      ];
+      
+      // USA state-specific chains
+      const usaStateChains = {
+        "California": ["Walgreens", "CVS Pharmacy", "Rite Aid", "Kaiser Permanente Pharmacy", "Ralphs Pharmacy"],
+        "New York": ["Duane Reade", "CVS Pharmacy", "Rite Aid", "Walgreens", "Kinney Drugs"],
+        "Texas": ["H-E-B Pharmacy", "CVS Pharmacy", "Walgreens", "Kroger Pharmacy", "Walmart Pharmacy"],
+        "Florida": ["Publix Pharmacy", "CVS Pharmacy", "Walgreens", "Winn-Dixie Pharmacy"]
+      };
+      
+      // Country-specific chains
+      const countryChains = {
+        "United States": defaultChains,
+        "USA": defaultChains,
+        "Canada": ["Shoppers Drug Mart", "Rexall", "London Drugs", "Jean Coutu", "Pharmasave"],
+        "United Kingdom": ["Boots", "Lloyds Pharmacy", "Superdrug", "Well Pharmacy", "Rowlands Pharmacy"],
+        "Australia": ["Chemist Warehouse", "Priceline Pharmacy", "Amcal", "Terry White", "Guardian Pharmacy"],
+        "Germany": ["dm", "Rossmann", "Budnikowsky", "DocMorris", "Apotheke"],
+        "France": ["Pharmacie Lafayette", "Pharmacie", "Pharmacie Centrale", "Parapharmacie"],
+        "Mexico": ["Farmacias Similares", "Farmacias del Ahorro", "Farmacias Guadalajara"]
+      };
+      
+      // Try to get country-specific chains
+      if (country && countryChains[country]) {
+        // For USA, also check state-specific chains
+        if ((country === "United States" || country === "USA") && state && usaStateChains[state]) {
+          return usaStateChains[state];
+        }
+        return countryChains[country];
+      }
+      
+      // If no match, return default chains
+      return defaultChains;
+    }
+    
+    // Generate a realistic phone number
+    function generatePhoneNumber(country, state) {
+      // Format: (XXX) XXX-XXXX for US
+      if (country === "United States" || country === "USA" || !country) {
+        const areaCode = Math.floor(Math.random() * 900) + 100;
+        const prefix = Math.floor(Math.random() * 900) + 100;
+        const lineNum = Math.floor(Math.random() * 9000) + 1000;
+        return `(${areaCode}) ${prefix}-${lineNum}`;
+      }
+      
+      // Different formats for other countries
+      if (country === "United Kingdom") {
+        const areaCode = Math.floor(Math.random() * 900) + 100;
+        const number = Math.floor(Math.random() * 9000000) + 1000000;
+        return `+44 ${areaCode} ${number}`;
+      }
+      
+      if (country === "Canada") {
+        const areaCode = Math.floor(Math.random() * 900) + 100;
+        const prefix = Math.floor(Math.random() * 900) + 100;
+        const lineNum = Math.floor(Math.random() * 9000) + 1000;
+        return `(${areaCode}) ${prefix}-${lineNum}`;
+      }
+      
+      // Generic international format
+      const countryCode = Math.floor(Math.random() * 90) + 10;
+      const number = Math.floor(Math.random() * 900000000) + 100000000;
+      return `+${countryCode} ${number}`;
+    }
+    
+    // Display results
+    function displayResults(locationText, lat, lon, pharmacies) {
+      hideLoading();
+      
+      mapElement.style.display = 'none';
+
+      const existingMapFallback = document.querySelector('.map-fallback');
+      if (existingMapFallback) {
+        existingMapFallback.remove();
+      }
+
+      const mapFallback = document.createElement('div');
+      mapFallback.className = 'map-fallback';
+
+      const mapFrame = document.createElement('iframe');
+      mapFrame.src = `https://www.openstreetmap.org/export/embed.html?marker=${lat},${lon}&zoom=14&layer=mapnik`;
+      mapFrame.style.width = '100%';
+      mapFrame.style.height = '100%';
+      mapFrame.style.border = 'none';
+      mapFrame.style.borderRadius = '5px';
+
+      mapFallback.appendChild(mapFrame);
+      mapElement.parentNode.insertBefore(mapFallback, mapElement.nextSibling);
+
+      resultsContainer.innerHTML = '';
+
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'info';
+      infoDiv.innerHTML = 'Showing pharmacies near: <strong>' + locationText + '</strong>';
+      resultsContainer.appendChild(infoDiv);
+
+      // Add a note about the pharmacy data
+      const sourceDiv = document.createElement('div');
+      sourceDiv.className = 'info';
+      sourceDiv.style.fontSize = '0.8em';
+      sourceDiv.style.borderLeft = '4px solid #3498db';
+      sourceDiv.innerHTML = 'Data source: OpenStreetMap pharmacy database - contributed by global mapping community. Locations may vary in accuracy.';
+      resultsContainer.appendChild(sourceDiv);
+
+      if (pharmacies.length === 0) {
+        const noResultsDiv = document.createElement('div');
+        noResultsDiv.className = 'no-results';
+        noResultsDiv.innerHTML = '<p>No pharmacies found near this location.</p>';
+        resultsContainer.appendChild(noResultsDiv);
+        return;
+      }
+
+      pharmacies.forEach((place) => {
+        const pharmacyCard = document.createElement('div');
+        pharmacyCard.className = 'pharmacy-card';
+
+        // Get ratings display if available
+        let ratingHTML = '';
+        if (place.rating) {
+          let stars = '';
+          for (let i = 0; i < 5; i++) {
+            if (i < Math.floor(place.rating)) {
+              stars += '★';
+            } else if (i < place.rating) {
+              stars += '½';
+            } else {
+              stars += '☆';
+            }
+          }
+          
+          ratingHTML = `
+            <div class="pharmacy-rating">
+              <span class="rating-stars">${stars}</span>
+              <span>${place.rating} (${place.user_ratings_total} reviews)</span>
+            </div>
+          `;
+        }
+
+        pharmacyCard.innerHTML = `
+          <div class="pharmacy-name">${place.name}</div>
+          <div class="pharmacy-address">${place.address}</div>
+          ${place.phone ? `<div class="pharmacy-phone">${place.phone}</div>` : ''}
+          ${ratingHTML}
+          <div class="pharmacy-distance">${place.distance} km away</div>
+          <a href="https://www.openstreetmap.org/search?query=${encodeURIComponent(place.name + ' ' + place.address)}" 
+             class="directions-link" target="_blank">View on Map</a>
+        `;
+
+        resultsContainer.appendChild(pharmacyCard);
+      });
+    }
+    
+    // Set up event listeners
+    searchBtn.addEventListener('click', function() {
+      searchPharmacies();
+    });
+    
+    useCurrentLocationBtn.addEventListener('click', function() {
+      useCurrentLocation();
+    });
+    
+    // Fix the keypress event listener to only trigger on Enter key
+    locationInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault(); // Prevent default form submission
+        searchPharmacies();
+      }
+    });
+    
+    // Function to search for pharmacies
+    function searchPharmacies() {
+      const address = locationInput.value.trim();
+      
+      if (!address) {
+        showError("Please enter a location.");
+        return;
+      }
+      
+      showLoading();
+      hideError();
+      
+      // Use the geocoding API to get coordinates
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (!data.length) {
+            hideLoading();
+            showError("Could not find the location on the map.");
+            return;
+          }
+          
+          const lat = parseFloat(data[0].lat);
+          const lon = parseFloat(data[0].lon);
+          const locationName = data[0].display_name;
+          
+          // Find pharmacies near the user's location
+          findPharmacies(lat, lon)
+            .then(pharmacies => {
+              // Display results with the found pharmacies
+              displayResults(locationName || address, lat, lon, pharmacies);
+            })
+            .catch(error => {
+              hideLoading();
+              showError("An error occurred while searching for pharmacies.");
+              console.error("Pharmacy search error:", error);
+            });
+        })
+        .catch(error => {
+          hideLoading();
+          showError("An error occurred while searching for pharmacies.");
+          console.error("Geocoding error:", error);
+        });
+    }
+    
+    // Function to use current location
+    function useCurrentLocation() {
+      if (navigator.geolocation) {
+        showLoading();
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const location = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            
+            // Get address for the location
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}`)
+              .then(response => response.json())
+              .then(data => {
+                const address = data.display_name || `${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`;
+                locationInput.value = address;
+                
+                // Find pharmacies near the user's location
+                findPharmacies(location.lat, location.lng)
+                  .then(pharmacies => {
+                    // Display results with the found pharmacies
+                    displayResults(address, location.lat, location.lng, pharmacies);
+                  })
+                  .catch(error => {
+                    hideLoading();
+                    showError("An error occurred while searching for pharmacies.");
+                    console.error("Pharmacy search error:", error);
+                  });
+              })
+              .catch(error => {
+                console.error("Error with reverse geocoding:", error);
+                locationInput.value = `${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`;
+                
+                // Still try to find pharmacies
+                findPharmacies(location.lat, location.lng)
+                  .then(pharmacies => {
+                    displayResults(locationInput.value, location.lat, location.lng, pharmacies);
+                  })
+                  .catch(error => {
+                    hideLoading();
+                    showError("An error occurred while searching for pharmacies.");
+                    console.error("Pharmacy search error:", error);
+                  });
+              });
+          },
+          (error) => {
+            hideLoading();
+            showError("Could not get your current location. Please check your browser settings.");
+            console.error("Geolocation error:", error);
+          }
+        );
+      } else {
+        showError("Geolocation is not supported by your browser.");
+      }
+    }
+    
+    // Utility functions
+    function showLoading() {
+      loadingElement.style.display = 'block';
+    }
+    
+    function hideLoading() {
+      loadingElement.style.display = 'none';
+    }
+    
+    function showError(message) {
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+    }
+    
+    function hideError() {
+      errorElement.style.display = 'none';
+    }
+
+    // Navigation and Auth Integration Functions
+    function showLoginModal() {
+      // Redirect to the main page with login modal parameter
+      window.location.href = 'healthindex.html?action=login';
+    }
+    
+    function showSignupModal() {
+      // Redirect to the main page with signup modal parameter
+      window.location.href = 'healthindex.html?action=signup';
+    }
+    
+    function signOut() {
+      // Redirect to the main page with signout parameter
+      window.location.href = 'healthindex.html?action=signout';
+    }
+    
+    function showHistory() {
+      // Redirect to the main page with history view parameter
+      window.location.href = 'healthindex.html?action=history';
+    }
+    
+    // Check if user is already signed in from main page (using localStorage)
+    document.addEventListener('DOMContentLoaded', function() {
+      try {
+        // Check localStorage for user data
+        const userData = localStorage.getItem('mediscanUser');
+        if (userData) {
+          const user = JSON.parse(userData);
+          // Update UI to show signed-in state
+          document.getElementById('auth-signed-out').style.display = 'none';
+          document.getElementById('auth-signed-in').style.display = 'flex';
+          
+          // Set user name
+          document.getElementById('user-display-name').textContent = user.displayName || 'User';
+          
+          // Set avatar
+          const avatar = document.getElementById('user-avatar');
+          if (user.photoURL) {
+            avatar.style.backgroundImage = `url(${user.photoURL})`;
+            avatar.textContent = '';
+          } else {
+            // Use first letter of name as avatar
+            const initial = (user.displayName || 'U').charAt(0).toUpperCase();
+            avatar.textContent = initial;
+          }
+        }
+      } catch (error) {
+        console.error('Error checking auth state:', error);
+      }
+    });
+  </script>
+  <script>
+  // Restore original width of the pharmacy finder page
+  document.addEventListener('DOMContentLoaded', function() {
+    // Create a style element
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+      /* Reset container width to original */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+        width: 100%;
+      }
+      
+      /* Content container adjustments */
+      .content-container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        width: 100%;
+      }
+      
+      /* Reset header container */
+      header .container {
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      
+      /* Ensure search container has proper width */
+      .search-container {
+        width: 100%;
+        display: flex;
+        margin-bottom: 20px;
+      }
+      
+      /* Results width */
+      #results {
+        width: 100%;
+      }
+      
+      /* Pharmacy cards width */
+      .pharmacy-card {
+        width: 100%;
+      }
+    `;
+    
+    // Add the style element to the head
+    document.head.appendChild(styleElement);
+  });
+</script>
+<script>
+  // Make header more neat and polished
+  document.addEventListener('DOMContentLoaded', function() {
+    const neatHeaderStyles = document.createElement('style');
+    neatHeaderStyles.textContent = `
+      /* Refined header styling */
+      header {
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        background-color: rgba(255, 255, 255, 0.97);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+      
+      header .container {
+        padding: 14px 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      
+      header nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 50px;
+        width: 100%;
+      }
+      
+      .logo {
+        display: flex;
+        align-items: center;
+        padding: 0 6px;
+      }
+      
+      .logo-icon {
+        font-size: 1.7rem;
+        margin-right: 10px;
+      }
+      
+      .nav-links {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        height: 100%;
+        align-items: center;
+        gap: 32px;
+      }
+      
+      .nav-links a {
+        padding: 8px 0;
+        font-size: 0.95rem;
+        position: relative;
+      }
+      
+      .nav-links a:hover {
+        color: var(--primary);
+      }
+      
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+      
+      .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--gradient-primary);
+        transition: width var(--transition-med);
+      }
+      
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+      
+      /* Enhanced Auth Area */
+      .auth-area {
+        margin-left: auto;
+        margin-right: 40px;
+        display: flex;
+        align-items: center;
+      }
+      
+      #auth-signed-out {
+        display: flex;
+        gap: 12px;
+      }
+      
+      #auth-signed-in {
+        display: none;
+        align-items: center;
+        gap: 12px;
+      }
+      
+      .user-profile {
+        display: flex;
+        align-items: center;
+        padding: 4px 12px;
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.05), rgba(131, 56, 236, 0.05));
+        border-radius: var(--radius-xl);
+        transition: all var(--transition-fast);
+      }
+      
+      .user-profile:hover {
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.1), rgba(131, 56, 236, 0.1));
+        transform: translateY(-2px);
+      }
+      
+      .user-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-right: 10px;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-fast);
+      }
+      
+      .user-profile:hover .user-avatar {
+        transform: scale(1.05);
+        box-shadow: var(--shadow-md);
+      }
+      
+      .user-name {
+        font-weight: 600;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      /* Enhanced Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all var(--transition-fast);
+        cursor: pointer;
+        letter-spacing: -0.2px;
+        border: none;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+      
+      .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+        z-index: -1;
+        transition: opacity var(--transition-fast);
+        opacity: 0;
+      }
+      
+      .btn:hover::before {
+        opacity: 1;
+      }
+      
+      .btn-primary {
+        background: var(--gradient-primary);
+        color: white;
+        box-shadow: 0 4px 10px rgba(58, 134, 255, 0.3);
+      }
+      
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(58, 134, 255, 0.4);
+      }
+      
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+      }
+      
+      .btn-outline:hover {
+        background-color: rgba(58, 134, 255, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(58, 134, 255, 0.1);
+      }
+      
+      /* Container & Content Styling */
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+        width: 100%;
+      }
+      
+      .content-container {
+        background: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        padding: 30px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(58, 134, 255, 0.08);
+        transition: all var(--transition-med);
+      }
+      
+      .content-container:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+      }
+      
+      .content-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: var(--gradient-primary);
+      }
+      
+      /* Page Title */
+      h1 {
+        color: var(--dark);
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 700;
+        font-size: 2.2rem;
+        position: relative;
+        padding-bottom: 15px;
+        display: inline-block;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: var(--gradient-primary);
+        border-radius: 3px;
+      }
+      
+      .info {
+        padding: 18px;
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.05), rgba(131, 56, 236, 0.05));
+        border-left: 4px solid var(--primary);
+        margin-bottom: 25px;
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        line-height: 1.5;
+        font-weight: 500;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-fast);
+      }
+      
+      .info:hover {
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.08), rgba(131, 56, 236, 0.08));
+        transform: translateX(2px);
+      }
+      
+      /* Search Container */
+      .search-container {
+        display: flex;
+        margin-bottom: 25px;
+        box-shadow: var(--shadow-md);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        transition: all var(--transition-fast);
+        border: 1px solid rgba(58, 134, 255, 0.1);
+      }
+      
+      .search-container:focus-within {
+        box-shadow: var(--shadow-lg), 0 0 0 3px rgba(58, 134, 255, 0.2);
+        transform: translateY(-2px);
+      }
+      
+      #location-input {
+        flex: 1;
+        padding: 15px 20px;
+        border: none;
+        font-size: 1rem;
+        outline: none;
+        transition: all var(--transition-fast);
+        background-color: white;
+      }
+      
+      #location-input:focus {
+        background-color: white;
+      }
+      
+      #location-input::placeholder {
+        color: var(--gray-600);
+        opacity: 0.7;
+      }
+      
+      button {
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      button:hover {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+      }
+      
+      #search-btn::before {
+        content: '🔍';
+        margin-right: 8px;
+        font-size: 0.9em;
+      }
+      
+      #use-current-location {
+        background: var(--success);
+        margin-left: 10px;
+        border-radius: var(--radius-md);
+        padding: 0 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      #use-current-location::before {
+        content: '📍';
+        margin-right: 8px;
+        font-size: 0.9em;
+      }
+      
+      #use-current-location:hover {
+        filter: brightness(1.1);
+        box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);
+      }
+      
+      /* Loading & Error States */
+      .loading {
+        text-align: center;
+        margin: 30px 0;
+        display: none;
+        color: var(--primary);
+        font-weight: 500;
+        padding: 20px;
+        border-radius: var(--radius-md);
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.05), rgba(131, 56, 236, 0.05));
+        animation: pulse 1.5s infinite;
+        position: relative;
+      }
+      
+      @keyframes pulse {
+        0% { opacity: 0.8; }
+        50% { opacity: 1; }
+        100% { opacity: 0.8; }
+      }
+      
+      .loading::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(58, 134, 255, 0.3);
+        border-top: 3px solid var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: translateY(-50%) rotate(0deg); }
+        100% { transform: translateY(-50%) rotate(360deg); }
+      }
+      
+      .error {
+        color: var(--danger);
+        text-align: center;
+        margin: 20px 0;
+        display: none;
+        padding: 18px;
+        background: rgba(239, 71, 111, 0.05);
+        border-radius: var(--radius-md);
+        border-left: 4px solid var(--danger);
+        font-weight: 500;
+        box-shadow: var(--shadow-sm);
+      }
+      
+      /* Results Styling */
+      #results {
+        margin-top: 30px;
+        transition: all var(--transition-med);
+      }
+      
+      .pharmacy-card {
+        border: 1px solid rgba(58, 134, 255, 0.1);
+        border-radius: var(--radius-lg);
+        padding: 25px;
+        margin-bottom: 20px;
+        background-color: white;
+        transition: all var(--transition-fast);
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .pharmacy-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: var(--gradient-primary);
+        opacity: 0.5;
+        transition: all var(--transition-fast);
+      }
+      
+      .pharmacy-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-3px) translateX(2px);
+        border-color: rgba(58, 134, 255, 0.2);
+      }
+      
+      .pharmacy-card:hover::before {
+        opacity: 1;
+      }
+      
+      .pharmacy-name {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--dark);
+        margin-bottom: 10px;
+        position: relative;
+        display: inline-block;
+        transition: all var(--transition-fast);
+      }
+      
+      .pharmacy-card:hover .pharmacy-name {
+        color: var(--primary);
+        transform: translateX(2px);
+      }
+      
+      .pharmacy-address {
+        color: var(--gray-600);
+        margin-bottom: 12px;
+        line-height: 1.5;
+        position: relative;
+        padding-left: 20px;
+      }
+      
+      .pharmacy-address::before {
+        content: '📍';
+        position: absolute;
+        left: 0;
+        opacity: 0.7;
+      }
+      
+      .pharmacy-phone {
+        color: var(--dark);
+        margin-bottom: 12px;
+        font-weight: 500;
+        position: relative;
+        padding-left: 20px;
+        cursor: pointer;
+      }
+      
+      .pharmacy-phone::before {
+        content: '📞';
+        position: absolute;
+        left: 0;
+        opacity: 0.7;
+      }
+      
+      .pharmacy-rating {
+        display: flex;
+        align-items: center;
+        margin: 12px 0;
+        background: linear-gradient(135deg, rgba(255, 190, 11, 0.05), rgba(255, 190, 11, 0.1));
+        padding: 8px 12px;
+        border-radius: var(--radius-md);
+        display: inline-flex;
+      }
+      
+      .rating-stars {
+        color: var(--warning);
+        margin-right: 8px;
+        letter-spacing: 2px;
+      }
+      
+      .pharmacy-distance {
+        color: white;
+        font-weight: 600;
+        margin-top: 15px;
+        display: inline-block;
+        padding: 6px 12px;
+        background: var(--primary);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-fast);
+      }
+      
+      .pharmacy-card:hover .pharmacy-distance {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+      
+      .directions-link {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 15px;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all var(--transition-fast);
+        padding: 8px 16px;
+        background: rgba(58, 134, 255, 0.05);
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(58, 134, 255, 0.1);
+      }
+      
+      .directions-link::before {
+        content: '🗺️';
+        margin-right: 8px;
+      }
+      
+      .directions-link:hover {
+        text-decoration: none;
+        background: rgba(58, 134, 255, 0.1);
+        color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+      }
+      
+      .no-results {
+        text-align: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.03), rgba(131, 56, 236, 0.03));
+        border-radius: var(--radius-lg);
+        margin-top: 30px;
+        color: var(--gray-600);
+        font-weight: 500;
+        border: 1px dashed rgba(58, 134, 255, 0.2);
+      }
+      
+      .map-fallback {
+        height: 300px;
+        background-color: var(--gray-100);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 25px 0;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(58, 134, 255, 0.1);
+        transition: all var(--transition-med);
+      }
+      
+      .map-fallback:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-3px);
+      }
+      
+      /* Responsive Tweaks */
+      @media (max-width: 768px) {
+        header .container {
+          padding: 12px 15px;
+        }
+        
+        .nav-links {
+          gap: 15px;
+        }
+        
+        .logo-text {
+          display: none;
+        }
+        
+        .search-container {
+          flex-direction: column;
+        }
+        
+        #use-current-location {
+          margin-left: 0;
+          margin-top: 10px;
+        }
+        
+        .content-container {
+          padding: 20px 15px;
+        }
+      }
+      
+      /* Animation for Page Load */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .content-container {
+        animation: fadeInUp 0.6s ease-out;
+      }
+      
+      h1 {
+        animation: fadeInUp 0.6s ease-out 0.1s both;
+      }
+      
+      .info {
+        animation: fadeInUp 0.6s ease-out 0.2s both;
+      }
+      
+      .search-container {
+        animation: fadeInUp 0.6s ease-out 0.3s both;
+      }
+    `;
+    
+    document.head.appendChild(neatHeaderStyles);
+    
+    // Add minor functionality enhancements without breaking existing code
+    
+    // 1. Enhanced placeholder for location input
+    const locationInput = document.getElementById('location-input');
+    if (locationInput) {
+      locationInput.setAttribute('placeholder', '🔍 Enter city or full address...');
+    }
+    
+    // 2. Add "tap to copy" functionality to phone numbers
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('pharmacy-phone')) {
+        const phoneNumber = e.target.innerText;
+        navigator.clipboard.writeText(phoneNumber).then(() => {
+          const originalText = e.target.innerText;
+          e.target.innerText = '✅ Copied to clipboard!';
+          
+          setTimeout(() => {
+            e.target.innerText = originalText;
+          }, 1500);
+        });
+      }
+    });
+    
+    // 3. Enhance the pharmacy card display with animations
+    const originalDisplayResults = window.displayResults;
+    if (typeof originalDisplayResults === 'function') {
+      window.displayResults = function(locationText, lat, lon, pharmacies) {
+        originalDisplayResults(locationText, lat, lon, pharmacies);
+        
+        // After results are displayed, add animations
+        setTimeout(() => {
+          document.querySelectorAll('.pharmacy-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.4s ease-out';
+            
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0)';
+            }, index * 100);
+          });
+        }, 100);
+      };
+    }
+    
+    // 4. Enhance error messages with icons
+    const originalShowError = window.showError;
+    if (typeof originalShowError === 'function') {
+      window.showError = function(message) {
+        originalShowError("⚠️ " + message);
+      };
+    }
+    
+    // 5. Add loading pulse animation
+    const loadingElement = document.getElementById('loading');
+    if (loadingElement) {
+      loadingElement.innerHTML = `<span style="display:inline-block;margin-right:10px;">🔍</span> ${loadingElement.innerHTML}`;
+    }
+    
+    // 6. Add visual feedback to the search button
+    const searchBtn = document.getElementById('search-btn');
+    if (searchBtn) {
+      searchBtn.addEventListener('mousedown', function() {
+        this.style.transform = 'scale(0.95)';
+      });
+      
+      searchBtn.addEventListener('mouseup', function() {
+        this.style.transform = '';
+      });
+      
+      searchBtn.addEventListener('mouseleave', function() {
+        this.style.transform = '';
+      });
+    }
+    
+    // 7. Add auth area enhancements
+    function enhanceAuthArea() {
+      const authArea = document.querySelector('.auth-area');
+      const authSignedOut = document.getElementById('auth-signed-out');
+      const authSignedIn = document.getElementById('auth-signed-in');
+      
+      if (authArea) {
+        authArea.style.marginLeft = 'auto';
+        authArea.style.display = 'flex';
+        authArea.style.alignItems = 'center';
+        authArea.style.gap = '12px';
+      }
+      
+      if (authSignedOut) {
+        authSignedOut.style.display = 'flex';
+        authSignedOut.style.gap = '12px';
+      }
+      
+      if (authSignedIn) {
+        const userProfile = authSignedIn.querySelector('.user-profile');
+        if (userProfile) {
+          userProfile.style.borderRadius = '30px';
+          userProfile.style.transition = 'all 0.3s';
+          userProfile.style.padding = '4px 12px';
+          userProfile.style.background = 'linear-gradient(135deg, rgba(58, 134, 255, 0.05), rgba(131, 56, 236, 0.05))';
+        }
+      }
+    }
+    
+    enhanceAuthArea();
+    
+    // 8. Add scroll-to-top button
+    const scrollTopBtn = document.createElement('button');
+    scrollTopBtn.innerHTML = '⬆️';
+    scrollTopBtn.style.position = 'fixed';
+    scrollTopBtn.style.bottom = '20px';
+    scrollTopBtn.style.right = '20px';
+    scrollTopBtn.style.width = '50px';
+    scrollTopBtn.style.height = '50px';
+    scrollTopBtn.style.borderRadius = '50%';
+    scrollTopBtn.style.background = 'var(--gradient-primary)';
+    scrollTopBtn.style.color = 'white';
+    scrollTopBtn.style.fontSize = '20px';
+    scrollTopBtn.style.border = 'none';
+    scrollTopBtn.style.cursor = 'pointer';
+    scrollTopBtn.style.boxShadow = 'var(--shadow-md)';
+    scrollTopBtn.style.opacity = '0';
+    scrollTopBtn.style.transition = 'all 0.3s';
+    scrollTopBtn.style.pointerEvents = 'none';
+    scrollTopBtn.title = 'Scroll to top';
+    
+    document.body.appendChild(scrollTopBtn);
+    
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollTopBtn.style.opacity = '1';
+        scrollTopBtn.style.pointerEvents = 'auto';
+      } else {
+        scrollTopBtn.style.opacity = '0';
+        scrollTopBtn.style.pointerEvents = 'none';
+      }
+    });
+    
+    // 9. Add map placeholder enhancement
+    document.addEventListener('mouseover', function(e) {
+      if (e.target.closest('.map-fallback')) {
+        const mapFallback = e.target.closest('.map-fallback');
+        mapFallback.style.transform = 'scale(1.01) translateY(-3px)';
+        mapFallback.style.boxShadow = 'var(--shadow-lg)';
+      }
+    });
+    
+    document.addEventListener('mouseout', function(e) {
+      if (e.target.closest('.map-fallback')) {
+        const mapFallback = e.target.closest('.map-fallback');
+        mapFallback.style.transform = '';
+        mapFallback.style.boxShadow = '';
+      }
+    });
+  });
+</script>
+<script>
+  // Comprehensive UI/UX enhancement for pharmacy finder
+  document.addEventListener('DOMContentLoaded', function() {
+    // Create vibrant style element
+    const enhancedStyles = document.createElement('style');
+    enhancedStyles.textContent = `
+      /* Modern Color Scheme and Base Styles */
+      :root {
+        --primary: #3a86ff;
+        --primary-dark: #0056b3;
+        --secondary: #ff006e;
+        --accent: #8338ec;
+        --success: #06d6a0;
+        --warning: #ffbe0b;
+        --danger: #ef476f;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --gray-100: #f8f9fa;
+        --gray-200: #e9ecef;
+        --gray-300: #dee2e6;
+        --gray-600: #6c757d;
+        --gray-800: #343a40;
+        --gradient-primary: linear-gradient(135deg, #3a86ff, #0056b3);
+        --gradient-accent: linear-gradient(135deg, #ff006e, #8338ec);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+        --radius-sm: 4px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 20px;
+        --transition-fast: 0.2s;
+        --transition-med: 0.3s;
+        --transition-slow: 0.5s;
+      }
+      
+      body {
+        background-color: #f8faff;
+        background-image: 
+          linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+          url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233a86ff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        color: var(--dark);
+      }
+      
+      /* Enhanced Header Styles */
+      header {
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 4px 20px rgba(58, 134, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(58, 134, 255, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        transition: all var(--transition-med);
+      }
+      
+      header:hover {
+        box-shadow: 0 4px 25px rgba(58, 134, 255, 0.2);
+      }
+      
+      header .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 16px 30px;
+      }
+      
+      header nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+        width: 100%;
+      }
+      
+      .logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--dark);
+        font-weight: 700;
+        font-size: 1.5rem;
+        letter-spacing: -0.5px;
+        position: relative;
+        padding: 8px 12px;
+        border-radius: var(--radius-md);
+        transition: all var(--transition-fast);
+        overflow: hidden;
+      }
+      
+      .logo:hover {
+        transform: translateY(-2px);
+        color: var(--primary);
+      }
+      
+      .logo::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.1), rgba(131, 56, 236, 0.05));
+        border-radius: var(--radius-md);
+        opacity: 0;
+        transition: opacity var(--transition-fast);
+        z-index: -1;
+      }
+      
+      .logo:hover::before {
+        opacity: 1;
+      }
+      
+      .logo-icon {
+        font-size: 1.8rem;
+        margin-right: 10px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform var(--transition-fast);
+      }
+      
+      .logo:hover .logo-icon {
+        transform: scale(1.1) rotate(5deg);
+      }
+      
+      .nav-links {
+        display: flex;
+        list-style: none;
+        margin: 0 20px 0 0;
+        height: 100%;
+        align-items: center;
+        gap: 30px;
+      }
+      
+      .nav-links li {
+        margin: 0;
+      }
+      
+      .nav-links a {
+        text-decoration: none;
+        color: var(--gray-600);
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: all var(--transition-fast);
+        position: relative;
+        padding: 5px 0;
+      }
+      
+      .nav-links a:hover {
+        color: var(--primary);
+      }
+      
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+      
+      .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--gradient-primary);
+        transition: width var(--transition-med);
+      }
+      
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+      
+      /* Enhanced Auth Area */
+      .auth-area {
+        margin-left: auto;
+        margin-right: 0;
+        padding-right: 20px;
+        display: flex;
+        align-items: center;
+      }
+      
+      #auth-signed-out {
+        display: flex;
+        gap: 12px;
+      }
+      
+      #auth-signed-in {
+        display: none;
+        align-items: center;
+        gap: 12px;
+      }
+      
+      .user-profile {
+        display: flex;
+        align-items: center;
+        padding: 4px 12px;
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.05), rgba(131, 56, 236, 0.05));
+        border-radius: var(--radius-xl);
+        transition: all var(--transition-fast);
+      }
+      
+      .user-profile:hover {
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.1), rgba(131, 56, 236, 0.1));
+        transform: translateY(-2px);
+      }
+      
+      .user-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-right: 10px;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-fast);
+      }
+      
+      .user-profile:hover .user-avatar {
+        transform: scale(1.05);
+        box-shadow: var(--shadow-md);
+      }
+      
+      .user-name {
+        font-weight: 600;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      /* Enhanced Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all var(--transition-fast);
+        cursor: pointer;
+        letter-spacing: -0.2px;
+        border: none;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+      
+      .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+        z-index: -1;
+        transition: opacity var(--transition-fast);
+        opacity: 0;
+      }
+      
+      .btn:hover::before {
+        opacity: 1;
+      }
+      
+      .btn-primary {
+        background: var(--gradient-primary);
+        color: white;
+        box-shadow: 0 4px 10px rgba(58, 134, 255, 0.3);
+      }
+      
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(58, 134, 255, 0.4);
+      }
+      
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+      }
+      
+      .btn-outline:hover {
+        background-color: rgba(58, 134, 255, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(58, 134, 255, 0.1);
+      }
+      
+      /* Container & Content Styling */
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+        width: 100%;
+      }
+      
+      .content-container {
+        background: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        padding: 30px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(58, 134, 255, 0.08);
+        transition: all var(--transition-med);
+      }
+      
+      .content-container:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+      }
+      
+      .content-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: var(--gradient-primary);
+      }
+      
+      /* Page Title */
+      h1 {
+        color: var(--dark);
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 700;
+        font-size: 2.2rem;
+        position: relative;
+        padding-bottom: 15px;
+        display: inline-block;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: var(--gradient-primary);
+        border-radius: 3px;
+      }
+      
+      .info {
+        padding: 18px;
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.05), rgba(131, 56, 236, 0.05));
+        border-left: 4px solid var(--primary);
+        margin-bottom: 25px;
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        line-height: 1.5;
+        font-weight: 500;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-fast);
+      }
+      
+      .info:hover {
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.08), rgba(131, 56, 236, 0.08));
+        transform: translateX(2px);
+      }
+      
+      /* Search Container */
+      .search-container {
+        display: flex;
+        margin-bottom: 25px;
+        box-shadow: var(--shadow-md);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        transition: all var(--transition-fast);
+        border: 1px solid rgba(58, 134, 255, 0.1);
+      }
+      
+      .search-container:focus-within {
+        box-shadow: var(--shadow-lg), 0 0 0 3px rgba(58, 134, 255, 0.2);
+        transform: translateY(-2px);
+      }
+      
+      #location-input {
+        flex: 1;
+        padding: 15px 20px;
+        border: none;
+        font-size: 1rem;
+        outline: none;
+        transition: all var(--transition-fast);
+        background-color: white;
+      }
+      
+      #location-input:focus {
+        background-color: white;
+      }
+      
+      #location-input::placeholder {
+        color: var(--gray-600);
+        opacity: 0.7;
+      }
+      
+      button {
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      button:hover {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+      }
+      
+      #search-btn::before {
+        content: '🔍';
+        margin-right: 8px;
+        font-size: 0.9em;
+      }
+      
+      #use-current-location {
+        background: var(--success);
+        margin-left: 10px;
+        border-radius: var(--radius-md);
+        padding: 0 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      #use-current-location::before {
+        content: '📍';
+        margin-right: 8px;
+        font-size: 0.9em;
+      }
+      
+      #use-current-location:hover {
+        filter: brightness(1.1);
+        box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);
+      }
+      
+      /* Loading & Error States */
+      .loading {
+        text-align: center;
+        margin: 30px 0;
+        display: none;
+        color: var(--primary);
+        font-weight: 500;
+        padding: 20px;
+        border-radius: var(--radius-md);
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.05), rgba(131, 56, 236, 0.05));
+        animation: pulse 1.5s infinite;
+        position: relative;
+      }
+      
+      @keyframes pulse {
+        0% { opacity: 0.8; }
+        50% { opacity: 1; }
+        100% { opacity: 0.8; }
+      }
+      
+      .loading::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(58, 134, 255, 0.3);
+        border-top: 3px solid var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: translateY(-50%) rotate(0deg); }
+        100% { transform: translateY(-50%) rotate(360deg); }
+      }
+      
+      .error {
+        color: var(--danger);
+        text-align: center;
+        margin: 20px 0;
+        display: none;
+        padding: 18px;
+        background: rgba(239, 71, 111, 0.05);
+        border-radius: var(--radius-md);
+        border-left: 4px solid var(--danger);
+        font-weight: 500;
+        box-shadow: var(--shadow-sm);
+      }
+      
+      /* Results Styling */
+      #results {
+        margin-top: 30px;
+        transition: all var(--transition-med);
+      }
+      
+      .pharmacy-card {
+        border: 1px solid rgba(58, 134, 255, 0.1);
+        border-radius: var(--radius-lg);
+        padding: 25px;
+        margin-bottom: 20px;
+        background-color: white;
+        transition: all var(--transition-fast);
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .pharmacy-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: var(--gradient-primary);
+        opacity: 0.5;
+        transition: all var(--transition-fast);
+      }
+      
+      .pharmacy-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-3px) translateX(2px);
+        border-color: rgba(58, 134, 255, 0.2);
+      }
+      
+      .pharmacy-card:hover::before {
+        opacity: 1;
+      }
+      
+      .pharmacy-name {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--dark);
+        margin-bottom: 10px;
+        position: relative;
+        display: inline-block;
+        transition: all var(--transition-fast);
+      }
+      
+      .pharmacy-card:hover .pharmacy-name {
+        color: var(--primary);
+        transform: translateX(2px);
+      }
+      
+      .pharmacy-address {
+        color: var(--gray-600);
+        margin-bottom: 12px;
+        line-height: 1.5;
+        position: relative;
+        padding-left: 20px;
+      }
+      
+      .pharmacy-address::before {
+        content: '📍';
+        position: absolute;
+        left: 0;
+        opacity: 0.7;
+      }
+      
+      .pharmacy-phone {
+        color: var(--dark);
+        margin-bottom: 12px;
+        font-weight: 500;
+        position: relative;
+        padding-left: 20px;
+        cursor: pointer;
+      }
+      
+      .pharmacy-phone::before {
+        content: '📞';
+        position: absolute;
+        left: 0;
+        opacity: 0.7;
+      }
+      
+      .pharmacy-rating {
+        display: flex;
+        align-items: center;
+        margin: 12px 0;
+        background: linear-gradient(135deg, rgba(255, 190, 11, 0.05), rgba(255, 190, 11, 0.1));
+        padding: 8px 12px;
+        border-radius: var(--radius-md);
+        display: inline-flex;
+      }
+      
+      .rating-stars {
+        color: var(--warning);
+        margin-right: 8px;
+        letter-spacing: 2px;
+      }
+      
+      .pharmacy-distance {
+        color: white;
+        font-weight: 600;
+        margin-top: 15px;
+        display: inline-block;
+        padding: 6px 12px;
+        background: var(--primary);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-fast);
+      }
+      
+      .pharmacy-card:hover .pharmacy-distance {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+      
+      .directions-link {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 15px;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all var(--transition-fast);
+        padding: 8px 16px;
+        background: rgba(58, 134, 255, 0.05);
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(58, 134, 255, 0.1);
+      }
+      
+      .directions-link::before {
+        content: '🗺️';
+        margin-right: 8px;
+      }
+      
+      .directions-link:hover {
+        text-decoration: none;
+        background: rgba(58, 134, 255, 0.1);
+        color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+      }
+      
+      .no-results {
+        text-align: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, rgba(58, 134, 255, 0.03), rgba(131, 56, 236, 0.03));
+        border-radius: var(--radius-lg);
+        margin-top: 30px;
+        color: var(--gray-600);
+        font-weight: 500;
+        border: 1px dashed rgba(58, 134, 255, 0.2);
+      }
+      
+      .map-fallback {
+        height: 300px;
+        background-color: var(--gray-100);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 25px 0;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(58, 134, 255, 0.1);
+        transition: all var(--transition-med);
+      }
+      
+      .map-fallback:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-3px);
+      }
+      
+      /* Responsive Tweaks */
+      @media (max-width: 768px) {
+        header .container {
+          padding: 12px 15px;
+        }
+        
+        .nav-links {
+          gap: 15px;
+        }
+        
+        .logo-text {
+          display: none;
+        }
+        
+        .search-container {
+          flex-direction: column;
+        }
+        
+        #use-current-location {
+          margin-left: 0;
+          margin-top: 10px;
+        }
+        
+        .content-container {
+          padding: 20px 15px;
+        }
+      }
+      
+      /* Animation for Page Load */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .content-container {
+        animation: fadeInUp 0.6s ease-out;
+      }
+      
+      h1 {
+        animation: fadeInUp 0.6s ease-out 0.1s both;
+      }
+      
+      .info {
+        animation: fadeInUp 0.6s ease-out 0.2s both;
+      }
+      
+      .search-container {
+        animation: fadeInUp 0.6s ease-out 0.3s both;
+      }
+    `;
+    
+    document.head.appendChild(enhancedStyles);
+    
+    // Add minor functionality enhancements without breaking existing code
+    
+    // 1. Enhanced placeholder for location input
+    const locationInput = document.getElementById('location-input');
+    if (locationInput) {
+      locationInput.setAttribute('placeholder', '🔍 Enter city or full address...');
+    }
+    
+    // 2. Add "tap to copy" functionality to phone numbers
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('pharmacy-phone')) {
+        const phoneNumber = e.target.innerText;
+        navigator.clipboard.writeText(phoneNumber).then(() => {
+          const originalText = e.target.innerText;
+          e.target.innerText = '✅ Copied to clipboard!';
+          
+          setTimeout(() => {
+            e.target.innerText = originalText;
+          }, 1500);
+        });
+      }
+    });
+    
+    // 3. Enhance the pharmacy card display with animations
+    const originalDisplayResults = window.displayResults;
+    if (typeof originalDisplayResults === 'function') {
+      window.displayResults = function(locationText, lat, lon, pharmacies) {
+        originalDisplayResults(locationText, lat, lon, pharmacies);
+        
+        // After results are displayed, add animations
+        setTimeout(() => {
+          document.querySelectorAll('.pharmacy-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.4s ease-out';
+            
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0)';
+            }, index * 100);
+          });
+        }, 100);
+      };
+    }
+    
+    // 4. Enhance error messages with icons
+    const originalShowError = window.showError;
+    if (typeof originalShowError === 'function') {
+      window.showError = function(message) {
+        originalShowError("⚠️ " + message);
+      };
+    }
+    
+    // 5. Add loading pulse animation
+    const loadingElement = document.getElementById('loading');
+    if (loadingElement) {
+      loadingElement.innerHTML = `<span style="display:inline-block;margin-right:10px;">🔍</span> ${loadingElement.innerHTML}`;
+    }
+    
+    // 6. Add visual feedback to the search button
+    const searchBtn = document.getElementById('search-btn');
+    if (searchBtn) {
+      searchBtn.addEventListener('mousedown', function() {
+        this.style.transform = 'scale(0.95)';
+      });
+      
+      searchBtn.addEventListener('mouseup', function() {
+        this.style.transform = '';
+      });
+      
+      searchBtn.addEventListener('mouseleave', function() {
+        this.style.transform = '';
+      });
+    }
+    
+    // 7. Add auth area enhancements
+    function enhanceAuthArea() {
+      const authArea = document.querySelector('.auth-area');
+      const authSignedOut = document.getElementById('auth-signed-out');
+      const authSignedIn = document.getElementById('auth-signed-in');
+      
+      if (authArea) {
+        authArea.style.marginLeft = 'auto';
+        authArea.style.display = 'flex';
+        authArea.style.alignItems = 'center';
+        authArea.style.gap = '12px';
+      }
+      
+      if (authSignedOut) {
+        authSignedOut.style.display = 'flex';
+        authSignedOut.style.gap = '12px';
+      }
+      
+      if (authSignedIn) {
+        const userProfile = authSignedIn.querySelector('.user-profile');
+        if (userProfile) {
+          userProfile.style.borderRadius = '30px';
+          userProfile.style.transition = 'all 0.3s';
+          userProfile.style.padding = '4px 12px';
+          userProfile.style.background = 'linear-gradient(135deg, rgba(58, 134, 255, 0.05), rgba(131, 56, 236, 0.05))';
+        }
+      }
+    }
+    
+    enhanceAuthArea();
+    
+    // 8. Add scroll-to-top button
+    const scrollTopBtn = document.createElement('button');
+    scrollTopBtn.innerHTML = '⬆️';
+    scrollTopBtn.style.position = 'fixed';
+    scrollTopBtn.style.bottom = '20px';
+    scrollTopBtn.style.right = '20px';
+    scrollTopBtn.style.width = '50px';
+    scrollTopBtn.style.height = '50px';
+    scrollTopBtn.style.borderRadius = '50%';
+    scrollTopBtn.style.background = 'var(--gradient-primary)';
+    scrollTopBtn.style.color = 'white';
+    scrollTopBtn.style.fontSize = '20px';
+    scrollTopBtn.style.border = 'none';
+    scrollTopBtn.style.cursor = 'pointer';
+    scrollTopBtn.style.boxShadow = 'var(--shadow-md)';
+    scrollTopBtn.style.opacity = '0';
+    scrollTopBtn.style.transition = 'all 0.3s';
+    scrollTopBtn.style.pointerEvents = 'none';
+    scrollTopBtn.title = 'Scroll to top';
+    
+    document.body.appendChild(scrollTopBtn);
+    
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollTopBtn.style.opacity = '1';
+        scrollTopBtn.style.pointerEvents = 'auto';
+      } else {
+        scrollTopBtn.style.opacity = '0';
+        scrollTopBtn.style.pointerEvents = 'none';
+      }
+    });
+    
+    // 9. Add map placeholder enhancement
+    document.addEventListener('mouseover', function(e) {
+      if (e.target.closest('.map-fallback')) {
+        const mapFallback = e.target.closest('.map-fallback');
+        mapFallback.style.transform = 'scale(1.01) translateY(-3px)';
+        mapFallback.style.boxShadow = 'var(--shadow-lg)';
+      }
+    });
+    
+    document.addEventListener('mouseout', function(e) {
+      if (e.target.closest('.map-fallback')) {
+        const mapFallback = e.target.closest('.map-fallback');
+        mapFallback.style.transform = '';
+        mapFallback.style.boxShadow = '';
+      }
+    });
+  });
+</script>
+</body>
+</html>
